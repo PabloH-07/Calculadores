@@ -71,7 +71,6 @@ h1 {
   margin: 4px 0 12px;
 }
 
-/* Abas */
 nav {
   display: flex;
   gap: 6px;
@@ -104,7 +103,6 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* Painéis */
 section {
   background: var(--surf);
   border: 1px solid var(--line);
@@ -116,7 +114,6 @@ section[hidden] {
   display: none;
 }
 
-/* Visor da calculadora */
 .disp {
   background: var(--bg);
   border: 1px solid var(--line);
@@ -147,7 +144,6 @@ section[hidden] {
   white-space: normal !important;
 }
 
-/* Teclado */
 .pad {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -174,7 +170,6 @@ section[hidden] {
   filter: brightness(.9);
 }
 
-/* Formulários */
 label {
   display: block;
   font-size: .9rem;
@@ -227,7 +222,6 @@ select {
   color: var(--ink);
 }
 
-/* Resultados */
 .out {
   margin-top: 12px;
   padding: 10px 12px;
@@ -240,7 +234,6 @@ select {
   white-space: pre-wrap;
 }
 
-/* Matrizes */
 .mx {
   display: inline-grid;
   gap: 4px;
