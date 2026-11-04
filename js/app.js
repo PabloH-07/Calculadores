@@ -1,6 +1,7 @@
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => String(parseFloat(n.toPrecision(12)));
+
 function show(el, msg, isErr) {
   el.textContent = msg;
   el.classList.toggle("err", !!isErr);
