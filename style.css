@@ -1,0 +1,268 @@
+:root {
+  --bg: #e9eeec;
+  --surf: #f8faf9;
+  --ink: #13282b;
+  --mute: #5b6f72;
+  --line: #c6d2d0;
+  --acc: #0f766e;
+  --accfg: #fff;
+  --op: #b45309;
+  --key: #dde6e4;
+  --err: #b42318;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1a1c;
+    --surf: #162427;
+    --ink: #e3eeec;
+    --mute: #93aaad;
+    --line: #2b4044;
+    --acc: #2dd4bf;
+    --accfg: #06201d;
+    --op: #f0a53a;
+    --key: #1f3236;
+    --err: #ff8a7a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e1a1c;
+  --surf: #162427;
+  --ink: #e3eeec;
+  --mute: #93aaad;
+  --line: #2b4044;
+  --acc: #2dd4bf;
+  --accfg: #06201d;
+  --op: #f0a53a;
+  --key: #1f3236;
+  --err: #ff8a7a;
+  color-scheme: dark;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font: 600 1.35rem/1.2 Georgia, "Times New Roman", serif;
+  margin: 4px 0 12px;
+}
+
+/* Abas */
+nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+nav button {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: var(--surf);
+  color: var(--ink);
+  padding: 9px 14px;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+
+nav button[aria-selected="true"] {
+  background: var(--acc);
+  color: var(--accfg);
+  border-color: var(--acc);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--op);
+  outline-offset: 2px;
+}
+
+/* Painéis */
+section {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+section[hidden] {
+  display: none;
+}
+
+/* Visor da calculadora */
+.disp {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  text-align: right;
+  min-height: 84px;
+  overflow-x: auto;
+}
+
+.disp .ex {
+  color: var(--mute);
+  font-size: .95rem;
+  min-height: 1.4em;
+  white-space: nowrap;
+}
+
+.disp .rs {
+  font: 600 2rem/1.3 "Courier New", monospace;
+  white-space: nowrap;
+}
+
+.err {
+  color: var(--err) !important;
+  font-size: 1rem !important;
+  font-weight: 600;
+  white-space: normal !important;
+}
+
+/* Teclado */
+.pad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.pad button {
+  padding: 14px 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--key);
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pad .op { color: var(--op); font-weight: 700; }
+.pad .eq { background: var(--acc); color: var(--accfg); }
+.pad .sc { font-size: .95rem; color: var(--mute); }
+
+.pad button:active {
+  filter: brightness(.9);
+}
+
+/* Formulários */
+label {
+  display: block;
+  font-size: .9rem;
+  color: var(--mute);
+  margin: 10px 0 4px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.row > * {
+  flex: 1 1 120px;
+}
+
+.act {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.act button,
+.go {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--acc);
+  color: var(--accfg);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.act .alt {
+  background: var(--key);
+  color: var(--ink);
+}
+
+/* Resultados */
+.out {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-family: "Courier New", monospace;
+  word-break: break-all;
+  min-height: 44px;
+  white-space: pre-wrap;
+}
+
+/* Matrizes */
+.mx {
+  display: inline-grid;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.mx input {
+  width: 56px;
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: right;
+}
