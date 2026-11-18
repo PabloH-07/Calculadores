@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Calculadora científica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="style.css">
+<script src="cal.js"></script>
+</head>
+<body>
+<main>
+<h1>Calculadora científica</h1>
+<nav role="tablist" id="tabs"></nav>
+
+<section id="p-basica">
+ <div class="disp"><div class="ex" id="bex"></div><div class="rs" id="brs">0</div></div>
+ <div class="pad" id="bpad"></div>
+</section>
+
+<section id="p-funcoes" hidden>
+ <label for="fx">f(x) =</label><input id="fx" value="x^2 + 3*x - 2" autocomplete="off" spellcheck="false">
+ <label for="xv">Valor de x</label><input id="xv" value="2" inputmode="decimal">
+ <div class="act"><button id="fgo">Calcular f(x)</button></div>
+ <div class="out" id="fout"></div>
+ <p style="color:var(--mute);font-size:.85rem">Aceita + − * / ^ ( ), π, e e as funções sin, cos, tan, sqrt, ln, log, abs, exp (ângulos em radianos).</p>
+</section>
+
+<section id="p-matrizes" hidden>
+ <div class="row">
+  <div><b>Matriz A</b><div class="row"><select id="ar"></select><select id="ac"></select></div><div class="wrap" id="ga"></div></div>
+  <div><b>Matriz B</b><div class="row"><select id="br"></select><select id="bc"></select></div><div class="wrap" id="gb"></div></div>
+ </div>
+ <label for="ks">Escalar k</label><input id="ks" value="2" inputmode="decimal">
+ <div class="act">
+  <button data-m="add">A + B</button><button data-m="sub">A − B</button>
+  <button data-m="kA">k · A</button><button data-m="mul">A × B</button><button data-m="det">det(A)</button>
+ </div>
+ <div class="out wrap" id="mout"></div>
+</section>
+
+<section id="p-comb" hidden>
+ <div class="row"><div><label for="cn">n</label><input id="cn" value="10" inputmode="numeric"></div>
+ <div><label for="ck">k</label><input id="ck" value="3" inputmode="numeric"></div></div>
+ <label for="cr">Repetições (ex.: 2,1,1 ou uma palavra como ARARA)</label><input id="cr" value="ARARA" autocomplete="off">
+ <div class="act"><button data-c="fat">n!</button><button data-c="pS">P(n) e A(n,k)</button><button data-c="pR">Permutação com repetição</button><button data-c="cmb">C(n,k)</button></div>
+ <div class="out" id="cout"></div>
+</section>
+
+<section id="p-bases" hidden>
+ <label for="bv">Número</label><input id="bv" value="255" autocomplete="off" spellcheck="false">
+ <label for="bb">Base de entrada</label>
+ <select id="bb"><option value="2">Binário (2)</option><option value="8">Octal (8)</option><option value="10" selected>Decimal (10)</option><option value="16">Hexadecimal (16)</option></select>
+ <div class="act"><button id="bgo">Converter</button></div>
+ <div class="out" id="bout"></div>
+</section>
+</main>
+ <script src="js/app.js"></script>
+</body>
+</html>
