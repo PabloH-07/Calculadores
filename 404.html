@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -11,10 +12,12 @@
 
 <body>
   <main class="app">
+
     <header>
       <h1 class="app__title">Calculadora científica</h1>
     </header>
-    <!--Navegação-->
+
+    <!-- Navegação por abas -->
     <nav class="tabs" role="tablist" aria-label="Módulos da calculadora">
       <button type="button" role="tab" id="t-basica" aria-controls="p-basica" aria-selected="true">Básica</button>
       <button type="button" role="tab" id="t-funcoes" aria-controls="p-funcoes" aria-selected="false">Funções</button>
@@ -24,7 +27,7 @@
       <button type="button" role="tab" id="t-bool" aria-controls="p-bool" aria-selected="false">Álgebra booleana</button>
     </nav>
 
-    <!--BÁSICA-->
+    <!-- Módulo: Básica -->
     <section class="panel" id="p-basica" role="tabpanel" aria-labelledby="t-basica">
       <div class="display" aria-live="polite">
         <div class="display__expression" id="bex"></div>
@@ -33,7 +36,7 @@
       <div class="keypad" id="bpad"></div>
     </section>
 
-    <!--FUNÇÕES -->
+    <!-- Módulo: Funções -->
     <section class="panel" id="p-funcoes" role="tabpanel" aria-labelledby="t-funcoes" hidden>
       <label for="fx">f(x) =</label>
       <input id="fx" type="text" value="x^2 + 3*x - 2" autocomplete="off" spellcheck="false">
@@ -54,7 +57,7 @@
       </p>
     </section>
 
-    <!--MATRIZES-->
+    <!-- Módulo: Matrizes -->
     <section class="panel" id="p-matrizes" role="tabpanel" aria-labelledby="t-matrizes" hidden>
       <div class="row">
         <fieldset class="matrix">
@@ -86,9 +89,11 @@
         <button type="button" data-m="mul">A × B</button>
         <button type="button" data-m="det">det(A)</button>
       </div>
+
       <div class="output scroll" id="mout" aria-live="polite"></div>
     </section>
-     <!--COMBINATORIA-->
+
+    <!-- Módulo: Combinatória -->
     <section class="panel" id="p-comb" role="tabpanel" aria-labelledby="t-comb" hidden>
       <div class="row">
         <div>
@@ -113,7 +118,8 @@
 
       <div class="output" id="cout" aria-live="polite"></div>
     </section>
-    <!--BASES-->
+
+    <!-- Módulo: Bases -->
     <section class="panel" id="p-bases" role="tabpanel" aria-labelledby="t-bases" hidden>
       <label for="bv">Número (aceita sinal, parte fracionária e prefixos 0b, 0o, 0x)</label>
       <input id="bv" type="text" value="255" autocomplete="off" spellcheck="false">
@@ -128,7 +134,7 @@
           <select id="bt"></select>
         </div>
       </div>
-    <!--ALGEBRA BOOLEANA-->
+
       <div class="actions">
         <button type="button" id="bgo">Converter</button>
       </div>
@@ -136,6 +142,7 @@
       <div class="output" id="bout" aria-live="polite"></div>
     </section>
 
+    <!-- Módulo: Álgebra booleana -->
     <section class="panel" id="p-bool" role="tabpanel" aria-labelledby="t-bool" hidden>
       <label for="be">Expressão booleana</label>
       <input id="be" type="text" value="A·B + ¬A·C" autocomplete="off" spellcheck="false">
@@ -150,6 +157,7 @@
       </div>
 
       <div class="output" id="boout" aria-live="polite"></div>
+
       <p class="hint">
         Variáveis: letras A–Z (até 6) e constantes 0 e 1.
         E: · . × * &amp; ∧ AND ou justaposição (AB).
@@ -162,6 +170,8 @@
         Também são aceitos ’ ′ (apóstrofo do celular), ⋅ ∙, ⊻, ⇒, ⇔ e ≡.
       </p>
     </section>
+
   </main>
 </body>
+
 </html>

@@ -1,5 +1,29 @@
+/**
+ * Calculadora científica
+ *
+ * Módulos:
+ *   1. Utilitários
+ *   2. Avaliador de expressões
+ *   3. Abas
+ *   4. Calculadora básica
+ *   5. Funções f(x)
+ *   6. Matrizes
+ *   7. Combinatória
+ *   8. Bases numéricas
+ *   9. Álgebra booleana
+ */
+
 "use strict";
+
+
+/* ==========================================================================
+   1. Utilitários
+   ========================================================================== */
+
+/** Atalho para document.getElementById. */
 const byId = (id) => document.getElementById(id);
+
+/** Formata um número com até 12 dígitos significativos, sem zeros à direita. */
 const formatNumber = (n) => String(parseFloat(n.toPrecision(12)));
 
 /**
@@ -26,6 +50,12 @@ function runGuarded(element, action) {
     showMessage(element, error.message, true);
   }
 }
+
+
+/* ==========================================================================
+   2. Avaliador de expressões
+   ========================================================================== */
+
 const TOKEN_PATTERN = new RegExp(
   "\\s*(" +
     "\\d+\\.?\\d*(?:e[+-]?\\d+)?|\\.\\d+(?:e[+-]?\\d+)?|" +
@@ -38,6 +68,8 @@ const TOKEN_PATTERN = new RegExp(
 function throwDomainError() {
   throw new Error("Fora do domínio");
 }
+
+/** Elimina ruído de ponto flutuante: sin(π) = 1.2e-16 → 0. */
 const snapToZero = (result, argument) =>
   Math.abs(result) < 1e-15 && Math.abs(argument) > 1e-6 ? 0 : result;
 
@@ -110,6 +142,8 @@ function evaluate(source, x) {
   const invalid = () => {
     throw new Error("Entrada inválida");
   };
+
+  // ")" faltando no fim da expressão é fechado automaticamente.
   const closeParenthesis = () => {
     if (index < tokens.length && tokens[index++] !== ")") {
       invalid();
@@ -148,6 +182,7 @@ function evaluate(source, x) {
           value *= right;
         }
       } else if (
+        // Multiplicação implícita: 2π, 3(4+1), 2x (mas não "1.2.3" nem "2 3")
         startsOperand(current) &&
         !(/^[\d.]/.test(current) && /^[\d.]/.test(previous))
       ) {
@@ -240,6 +275,12 @@ function evaluate(source, x) {
   }
   return result;
 }
+
+
+/* ==========================================================================
+   3. Abas
+   ========================================================================== */
+
 function initTabs() {
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const panels = tabs.map((tab) => byId(tab.getAttribute("aria-controls")));
@@ -255,6 +296,7 @@ function initTabs() {
   tabs.forEach((tab, i) => {
     tab.addEventListener("click", () => activate(i));
 
+    // Navegação por teclado entre abas (padrão WAI-ARIA)
     tab.addEventListener("keydown", (event) => {
       const last = tabs.length - 1;
       const target = {
@@ -274,6 +316,12 @@ function initTabs() {
 
   activate(0);
 }
+
+
+/* ==========================================================================
+   4. Calculadora básica
+   ========================================================================== */
+
 const BASIC_KEYS = [
   ["sin(", "sc"], ["cos(", "sc"], ["tan(", "sc"], ["√(", "sc"],
   ["ln(", "sc"], ["log(", "sc"], ["^", "sc"], ["π", "sc"],
@@ -299,7 +347,7 @@ const KEYBOARD_MAP = {
 
 const basicState = {
   expression: "",
-  finished: false, 
+  finished: false, // true logo após "=": o próximo dígito inicia uma nova conta
 };
 
 function renderBasic(result, isError = false) {
@@ -361,6 +409,8 @@ function pressKey(key) {
   state.expression += key;
   renderBasic(state.expression);
 }
+
+/** Alterna o sinal do último número digitado: 5 ⇄ (-5). */
 function toggleSign() {
   const negated = /\(-(\d+\.?\d*|\.\d+)\)$/;
   const number = /(\d+\.?\d*|\.\d+)$/;
@@ -399,6 +449,12 @@ function initBasic() {
     }
   });
 }
+
+
+/* ==========================================================================
+   5. Funções f(x)
+   ========================================================================== */
+
 function initFunctions() {
   byId("fgo").addEventListener("click", () =>
     runGuarded(byId("fout"), () => {
@@ -412,6 +468,12 @@ function initFunctions() {
     })
   );
 }
+
+
+/* ==========================================================================
+   6. Matrizes
+   ========================================================================== */
+
 const MATRIX_SIZES = { min: 1, max: 5, initial: 3 };
 
 const MATRIX_SELECT_LABELS = {
@@ -421,6 +483,7 @@ const MATRIX_SELECT_LABELS = {
   bc: "Colunas de B",
 };
 
+/** Lê os valores crus (texto) da grade, usando as dimensões gravadas na construção. */
 function readRawMatrix(name) {
   const grid = byId("g" + name).querySelector(".matrix-grid");
   if (!grid) {
@@ -439,6 +502,8 @@ function readRawMatrix(name) {
   }
   return values;
 }
+
+/** (Re)constrói a grade de entradas da matriz, preservando valores já digitados. */
 function buildMatrixGrid(name) {
   const rows = Number(byId(name + "r").value);
   const cols = Number(byId(name + "c").value);
@@ -466,6 +531,8 @@ function buildMatrixGrid(name) {
   container.innerHTML = "";
   container.append(grid);
 }
+
+/** Lê a matriz numérica, avaliando cada célula como expressão. */
 function readMatrix(name) {
   const rows = Number(byId(name + "r").value);
   const cols = Number(byId(name + "c").value);
@@ -488,6 +555,8 @@ function readMatrix(name) {
   }
   return matrix;
 }
+
+/** Determinante exato de matriz de inteiros (algoritmo de Bareiss com BigInt). */
 function determinantExact(matrix) {
   const n = matrix.length;
   const a = matrix.map((row) => row.map((v) => BigInt(v)));
@@ -518,6 +587,11 @@ function determinantExact(matrix) {
   }
   return sign * a[n - 1][n - 1];
 }
+
+/**
+ * Determinante em ponto flutuante: pivotamento parcial, depois de equilibrar
+ * linhas e colunas por potências de 2 (escala exata, sem erro de arredondamento).
+ */
 function determinantFloat(matrix) {
   const n = matrix.length;
   const a = matrix.map((row) => row.slice());
@@ -587,6 +661,7 @@ function determinant(matrix) {
   return value;
 }
 
+/** Converte uma matriz em texto tabulado. */
 const matrixToText = (matrix) =>
   matrix.map((row) => row.map((v) => formatNumber(v)).join("\t")).join("\n");
 
@@ -620,6 +695,8 @@ function applyMatrixOperation(operation) {
       a.map((row, i) => row.map((v, j) => (operation === "add" ? v + b[i][j] : v - b[i][j])))
     );
   }
+
+  // Multiplicação A × B
   if (a[0].length !== b.length) {
     throw new Error("Dimensões incompatíveis: colunas de A devem ser iguais às linhas de B");
   }
@@ -650,6 +727,12 @@ function initMatrices() {
     );
   });
 }
+
+
+/* ==========================================================================
+   7. Combinatória (BigInt)
+   ========================================================================== */
+
 const FACTORIAL_LIMIT = 3000n;
 const COMBINATION_LIMIT = 100000n;
 
@@ -673,6 +756,7 @@ function factorial(n) {
   return result;
 }
 
+/** Interpreta o campo "Repetições": lista de números (2,1,1) ou palavra (ARARA). */
 function parseMultiplicities(raw) {
   if (/^[\d,;\s]+$/.test(raw)) {
     return raw.split(/[,;\s]+/).filter(Boolean).map(BigInt);
@@ -749,6 +833,12 @@ function initCombinatorics() {
     );
   });
 }
+
+
+/* ==========================================================================
+   8. Bases numéricas
+   ========================================================================== */
+
 const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE_NAMES = { 2: "Binário", 8: "Octal", 10: "Decimal", 16: "Hexadecimal" };
 const BASE_PREFIXES = { 2: "0B", 8: "0O", 16: "0X" };
@@ -818,6 +908,7 @@ function parseInBase(text, base) {
   return { negative, numerator, denominator: bigBase ** BigInt(fractionPart.length) };
 }
 
+/** Converte a fração num/den para a base indicada (até 24 dígitos fracionários). */
 function formatInBase(numerator, denominator, base) {
   let text = (numerator / denominator).toString(base).toUpperCase();
   let remainder = numerator % denominator;
@@ -880,6 +971,11 @@ function initBases() {
 
   byId("bgo").addEventListener("click", () => runGuarded(byId("bout"), convertBases));
 }
+
+
+/* ==========================================================================
+   9. Álgebra booleana
+   ========================================================================== */
 
 const MAX_BOOLEAN_VARIABLES = 6;
 
@@ -1037,6 +1133,7 @@ function parseBoolean(source) {
   return { ast, vars: [...variables].sort() };
 }
 
+/** Avalia a árvore para um ambiente {variável: booleano}. */
 function evaluateBoolean(node, env) {
   switch (node.op) {
     case "CONST": return node.value;
@@ -1078,6 +1175,7 @@ function quineMcCluskey(minterms, n) {
 
   const toBinary = (m) => m.toString(2).padStart(n, "0");
 
+  // --- Fase 1: geração dos implicantes primos ---
   let current = new Set(minterms.map(toBinary));
   const primes = [];
 
@@ -1115,6 +1213,8 @@ function quineMcCluskey(minterms, n) {
     });
     current = next;
   }
+
+  // --- Fase 2: tabela de cobertura ---
   const covers = (prime, minterm) => {
     const bits = toBinary(minterm);
     for (let k = 0; k < n; k++) {
@@ -1142,6 +1242,7 @@ function quineMcCluskey(minterms, n) {
 
   const cost = (j) => 1000 + literalCount(primes[j]);
 
+  /** Limite inferior: mintermos sem primo em comum precisam de termos distintos. */
   const independentCount = (left, options) => {
     const blocked = new Set();
     let count = 0;
@@ -1158,6 +1259,7 @@ function quineMcCluskey(minterms, n) {
   function solve(left, candidates, selected, literals) {
     let options;
 
+    // Reduz a tabela de cobertura até não mudar mais
     for (;;) {
       if (!left.length) {
         const total = selected.length * 1000 + literals;
@@ -1180,6 +1282,7 @@ function quineMcCluskey(minterms, n) {
         }
       }
 
+      // Primo essencial
       const essential = left.find((m) => options[m].length === 1);
       if (essential !== undefined) {
         const j = options[essential][0];
@@ -1190,6 +1293,7 @@ function quineMcCluskey(minterms, n) {
         continue;
       }
 
+      // Dominância de linhas: se "a" é coberto por um subconjunto dos primos de "b", descarta "b"
       let dropRow = null;
       rows: for (const a of left) {
         for (const b of left) {
@@ -1213,6 +1317,7 @@ function quineMcCluskey(minterms, n) {
         continue;
       }
 
+      // Dominância de colunas: "k" cobre tudo que "j" cobre, por custo ≤
       let dropColumn = null;
       cols: for (const j of candidates) {
         const coveredByJ = left.filter((m) => coveredBy[j].has(m));
@@ -1243,6 +1348,7 @@ function quineMcCluskey(minterms, n) {
       return;
     }
 
+    // Ramifica no mintermo com menos opções
     let pick = left[0];
     for (const m of left) {
       if (options[m].length < options[pick].length) {
@@ -1287,6 +1393,7 @@ function createElement(tag, text, className) {
   return element;
 }
 
+/** Monta a tabela-verdade (F e, opcionalmente, G). */
 function buildTruthTable(vars, f, g) {
   const n = vars.length;
   const hasSecond = g.length > 0;
@@ -1461,6 +1568,11 @@ function initBoolean() {
 
   byId("bogo").addEventListener("click", analyzeBoolean);
 }
+
+
+/* ==========================================================================
+   Inicialização
+   ========================================================================== */
 
 initTabs();
 initBasic();
