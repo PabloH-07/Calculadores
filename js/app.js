@@ -1,29 +1,11 @@
-/**
- * Calculadora científica
- *
- * Módulos:
- *   1. Utilitários
- *   2. Avaliador de expressões
- *   3. Abas
- *   4. Calculadora básica
- *   5. Funções f(x)
- *   6. Matrizes
- *   7. Combinatória
- *   8. Bases numéricas
- *   9. Álgebra booleana
- */
 
 "use strict";
 
 
-/* ==========================================================================
-   1. Utilitários
-   ========================================================================== */
 
-/** Atalho para document.getElementById. */
+
 const byId = (id) => document.getElementById(id);
 
-/** Formata um número com até 12 dígitos significativos, sem zeros à direita. */
 const formatNumber = (n) => String(parseFloat(n.toPrecision(12)));
 
 /**
@@ -52,9 +34,7 @@ function runGuarded(element, action) {
 }
 
 
-/* ==========================================================================
-   2. Avaliador de expressões
-   ========================================================================== */
+
 
 const TOKEN_PATTERN = new RegExp(
   "\\s*(" +
@@ -182,7 +162,7 @@ function evaluate(source, x) {
           value *= right;
         }
       } else if (
-        // Multiplicação implícita: 2π, 3(4+1), 2x (mas não "1.2.3" nem "2 3")
+   
         startsOperand(current) &&
         !(/^[\d.]/.test(current) && /^[\d.]/.test(previous))
       ) {
@@ -277,10 +257,6 @@ function evaluate(source, x) {
 }
 
 
-/* ==========================================================================
-   3. Abas
-   ========================================================================== */
-
 function initTabs() {
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const panels = tabs.map((tab) => byId(tab.getAttribute("aria-controls")));
@@ -318,9 +294,7 @@ function initTabs() {
 }
 
 
-/* ==========================================================================
-   4. Calculadora básica
-   ========================================================================== */
+
 
 const BASIC_KEYS = [
   ["sin(", "sc"], ["cos(", "sc"], ["tan(", "sc"], ["√(", "sc"],
@@ -451,10 +425,6 @@ function initBasic() {
 }
 
 
-/* ==========================================================================
-   5. Funções f(x)
-   ========================================================================== */
-
 function initFunctions() {
   byId("fgo").addEventListener("click", () =>
     runGuarded(byId("fout"), () => {
@@ -470,10 +440,6 @@ function initFunctions() {
 }
 
 
-/* ==========================================================================
-   6. Matrizes
-   ========================================================================== */
-
 const MATRIX_SIZES = { min: 1, max: 5, initial: 3 };
 
 const MATRIX_SELECT_LABELS = {
@@ -483,7 +449,7 @@ const MATRIX_SELECT_LABELS = {
   bc: "Colunas de B",
 };
 
-/** Lê os valores crus (texto) da grade, usando as dimensões gravadas na construção. */
+
 function readRawMatrix(name) {
   const grid = byId("g" + name).querySelector(".matrix-grid");
   if (!grid) {
@@ -503,7 +469,6 @@ function readRawMatrix(name) {
   return values;
 }
 
-/** (Re)constrói a grade de entradas da matriz, preservando valores já digitados. */
 function buildMatrixGrid(name) {
   const rows = Number(byId(name + "r").value);
   const cols = Number(byId(name + "c").value);
@@ -532,7 +497,6 @@ function buildMatrixGrid(name) {
   container.append(grid);
 }
 
-/** Lê a matriz numérica, avaliando cada célula como expressão. */
 function readMatrix(name) {
   const rows = Number(byId(name + "r").value);
   const cols = Number(byId(name + "c").value);
@@ -556,7 +520,6 @@ function readMatrix(name) {
   return matrix;
 }
 
-/** Determinante exato de matriz de inteiros (algoritmo de Bareiss com BigInt). */
 function determinantExact(matrix) {
   const n = matrix.length;
   const a = matrix.map((row) => row.map((v) => BigInt(v)));
@@ -588,10 +551,7 @@ function determinantExact(matrix) {
   return sign * a[n - 1][n - 1];
 }
 
-/**
- * Determinante em ponto flutuante: pivotamento parcial, depois de equilibrar
- * linhas e colunas por potências de 2 (escala exata, sem erro de arredondamento).
- */
+
 function determinantFloat(matrix) {
   const n = matrix.length;
   const a = matrix.map((row) => row.slice());
@@ -661,7 +621,6 @@ function determinant(matrix) {
   return value;
 }
 
-/** Converte uma matriz em texto tabulado. */
 const matrixToText = (matrix) =>
   matrix.map((row) => row.map((v) => formatNumber(v)).join("\t")).join("\n");
 
@@ -728,11 +687,6 @@ function initMatrices() {
   });
 }
 
-
-/* ==========================================================================
-   7. Combinatória (BigInt)
-   ========================================================================== */
-
 const FACTORIAL_LIMIT = 3000n;
 const COMBINATION_LIMIT = 100000n;
 
@@ -756,7 +710,6 @@ function factorial(n) {
   return result;
 }
 
-/** Interpreta o campo "Repetições": lista de números (2,1,1) ou palavra (ARARA). */
 function parseMultiplicities(raw) {
   if (/^[\d,;\s]+$/.test(raw)) {
     return raw.split(/[,;\s]+/).filter(Boolean).map(BigInt);
@@ -835,16 +788,11 @@ function initCombinatorics() {
 }
 
 
-/* ==========================================================================
-   8. Bases numéricas
-   ========================================================================== */
-
 const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE_NAMES = { 2: "Binário", 8: "Octal", 10: "Decimal", 16: "Hexadecimal" };
 const BASE_PREFIXES = { 2: "0B", 8: "0O", 16: "0X" };
 const FRACTION_DIGITS = 24;
 
-/** Explica por que o dígito não é válido na base escolhida. */
 function describeInvalidDigit(char, digit, base) {
   const hint = `Na base ${base} use só 0 a ${DIGITS[base - 1]}.`;
 
@@ -971,11 +919,6 @@ function initBases() {
 
   byId("bgo").addEventListener("click", () => runGuarded(byId("bout"), convertBases));
 }
-
-
-/* ==========================================================================
-   9. Álgebra booleana
-   ========================================================================== */
 
 const MAX_BOOLEAN_VARIABLES = 6;
 
@@ -1570,9 +1513,6 @@ function initBoolean() {
 }
 
 
-/* ==========================================================================
-   Inicialização
-   ========================================================================== */
 
 initTabs();
 initBasic();
