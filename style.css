@@ -1,3 +1,23 @@
+/* ==========================================================================
+   Calculadora científica — folha de estilos
+   Sumário:
+     1. Tokens de design (cores e temas)
+     2. Reset e base
+     3. Layout geral
+     4. Abas
+     5. Painéis
+     6. Visor e teclado
+     7. Formulários
+     8. Botões de ação
+     9. Saída de resultados
+    10. Matrizes e tabelas
+    11. Acessibilidade
+   ========================================================================== */
+
+
+/* 1. Tokens de design
+   -------------------------------------------------------------------------- */
+
 :root {
   --bg: #e9eeec;
   --surface: #f8faf9;
@@ -13,6 +33,7 @@
   color-scheme: light;
 }
 
+/* Tema escuro automático (preferência do sistema), a menos que o tema claro seja forçado */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e1a1c;
@@ -30,6 +51,7 @@
   }
 }
 
+/* Tema escuro explícito */
 :root[data-theme="dark"] {
   --bg: #0e1a1c;
   --surface: #162427;
@@ -44,6 +66,10 @@
 
   color-scheme: dark;
 }
+
+
+/* 2. Reset e base
+   -------------------------------------------------------------------------- */
 
 *,
 *::before,
@@ -98,6 +124,10 @@ th {
   font-weight: 600;
 }
 
+
+/* 3. Layout geral
+   -------------------------------------------------------------------------- */
+
 .app {
   max-width: 640px;
   margin: 0 auto;
@@ -128,6 +158,10 @@ th {
   font-size: 0.85rem;
 }
 
+
+/* 4. Abas
+   -------------------------------------------------------------------------- */
+
 .tabs {
   display: flex;
   gap: 6px;
@@ -152,6 +186,10 @@ th {
   color: var(--accent-ink);
 }
 
+
+/* 5. Painéis
+   -------------------------------------------------------------------------- */
+
 .panel {
   padding: 14px;
   border: 1px solid var(--line);
@@ -162,6 +200,10 @@ th {
 .panel[hidden] {
   display: none;
 }
+
+
+/* 6. Visor e teclado
+   -------------------------------------------------------------------------- */
 
 .display {
   min-height: 84px;
@@ -222,6 +264,10 @@ th {
   font-size: 0.95rem;
 }
 
+
+/* 7. Formulários
+   -------------------------------------------------------------------------- */
+
 label {
   display: block;
   margin: 10px 0 4px;
@@ -238,6 +284,10 @@ select {
   background: var(--bg);
   color: var(--ink);
 }
+
+
+/* 8. Botões de ação
+   -------------------------------------------------------------------------- */
 
 .actions {
   display: flex;
@@ -261,6 +311,10 @@ select {
   color: var(--ink);
 }
 
+
+/* 9. Saída de resultados
+   -------------------------------------------------------------------------- */
+
 .output {
   min-height: 44px;
   margin-top: 12px;
@@ -272,6 +326,7 @@ select {
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+
 .output .line {
   display: block;
   margin-bottom: 6px;
@@ -286,12 +341,17 @@ select {
   overflow-x: auto;
 }
 
+/* Estado de erro (visor e saídas) */
 .is-error {
   color: var(--error) !important;
   font-size: 1rem !important;
   font-weight: 600;
   white-space: normal !important;
 }
+
+
+/* 10. Matrizes e tabelas
+   -------------------------------------------------------------------------- */
 
 .matrix-grid {
   display: inline-grid;
@@ -314,6 +374,10 @@ select {
   background: var(--key);
   font-weight: 700;
 }
+
+
+/* 11. Acessibilidade
+   -------------------------------------------------------------------------- */
 
 button:focus-visible,
 input:focus-visible,

@@ -1,59 +1,170 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8">
-<title>Calculadora científica</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="stylesheet" href="style.css">
-<script src="cal.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Calculadora científica com funções, matrizes, combinatória, bases numéricas e álgebra booleana.">
+  <title>Calculadora científica</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
+
 <body>
-<main>
-<h1>Calculadora científica</h1>
-<nav role="tablist" id="tabs"></nav>
+  <main class="app">
 
-<section id="p-basica">
- <div class="disp"><div class="ex" id="bex"></div><div class="rs" id="brs">0</div></div>
- <div class="pad" id="bpad"></div>
-</section>
+    <header>
+      <h1 class="app__title">Calculadora científica</h1>
+    </header>
 
-<section id="p-funcoes" hidden>
- <label for="fx">f(x) =</label><input id="fx" value="x^2 + 3*x - 2" autocomplete="off" spellcheck="false">
- <label for="xv">Valor de x</label><input id="xv" value="2" inputmode="decimal">
- <div class="act"><button id="fgo">Calcular f(x)</button></div>
- <div class="out" id="fout"></div>
- <p style="color:var(--mute);font-size:.85rem">Aceita + − * / ^ ( ), π, e e as funções sin, cos, tan, sqrt, ln, log, abs, exp (ângulos em radianos).</p>
-</section>
+    <nav class="tabs" role="tablist" aria-label="Módulos da calculadora">
+      <button type="button" role="tab" id="t-basica" aria-controls="p-basica" aria-selected="true">Básica</button>
+      <button type="button" role="tab" id="t-funcoes" aria-controls="p-funcoes" aria-selected="false">Funções</button>
+      <button type="button" role="tab" id="t-matrizes" aria-controls="p-matrizes" aria-selected="false">Matrizes</button>
+      <button type="button" role="tab" id="t-comb" aria-controls="p-comb" aria-selected="false">Combinatória</button>
+      <button type="button" role="tab" id="t-bases" aria-controls="p-bases" aria-selected="false">Bases</button>
+      <button type="button" role="tab" id="t-bool" aria-controls="p-bool" aria-selected="false">Álgebra booleana</button>
+    </nav>
 
-<section id="p-matrizes" hidden>
- <div class="row">
-  <div><b>Matriz A</b><div class="row"><select id="ar"></select><select id="ac"></select></div><div class="wrap" id="ga"></div></div>
-  <div><b>Matriz B</b><div class="row"><select id="br"></select><select id="bc"></select></div><div class="wrap" id="gb"></div></div>
- </div>
- <label for="ks">Escalar k</label><input id="ks" value="2" inputmode="decimal">
- <div class="act">
-  <button data-m="add">A + B</button><button data-m="sub">A − B</button>
-  <button data-m="kA">k · A</button><button data-m="mul">A × B</button><button data-m="det">det(A)</button>
- </div>
- <div class="out wrap" id="mout"></div>
-</section>
+    <section class="panel" id="p-basica" role="tabpanel" aria-labelledby="t-basica">
+      <div class="display" aria-live="polite">
+        <div class="display__expression" id="bex"></div>
+        <div class="display__result" id="brs">0</div>
+      </div>
+      <div class="keypad" id="bpad"></div>
+    </section>
 
-<section id="p-comb" hidden>
- <div class="row"><div><label for="cn">n</label><input id="cn" value="10" inputmode="numeric"></div>
- <div><label for="ck">k</label><input id="ck" value="3" inputmode="numeric"></div></div>
- <label for="cr">Repetições (ex.: 2,1,1 ou uma palavra como ARARA)</label><input id="cr" value="ARARA" autocomplete="off">
- <div class="act"><button data-c="fat">n!</button><button data-c="pS">P(n) e A(n,k)</button><button data-c="pR">Permutação com repetição</button><button data-c="cmb">C(n,k)</button></div>
- <div class="out" id="cout"></div>
-</section>
+    <section class="panel" id="p-funcoes" role="tabpanel" aria-labelledby="t-funcoes" hidden>
+      <label for="fx">f(x) =</label>
+      <input id="fx" type="text" value="x^2 + 3*x - 2" autocomplete="off" spellcheck="false">
 
-<section id="p-bases" hidden>
- <label for="bv">Número</label><input id="bv" value="255" autocomplete="off" spellcheck="false">
- <label for="bb">Base de entrada</label>
- <select id="bb"><option value="2">Binário (2)</option><option value="8">Octal (8)</option><option value="10" selected>Decimal (10)</option><option value="16">Hexadecimal (16)</option></select>
- <div class="act"><button id="bgo">Converter</button></div>
- <div class="out" id="bout"></div>
-</section>
-</main>
- <script src="js/app.js"></script>
+      <label for="xv">Valor de x (aceita expressões como pi/2)</label>
+      <input id="xv" type="text" value="2" inputmode="text" autocomplete="off" spellcheck="false">
+
+      <div class="actions">
+        <button type="button" id="fgo">Calcular f(x)</button>
+      </div>
+
+      <div class="output" id="fout" aria-live="polite"></div>
+
+      <p class="hint">
+        Aceita + − * / ^ ( ), π, e e as funções sin, cos, tan, asin, acos, atan, sinh, cosh, tanh,
+        sqrt, cbrt, ln, log (base 10), log2, abs, exp, floor, ceil, round (ângulos em radianos).
+        A multiplicação implícita funciona: 2x, 3(x+1), x(x−2).
+      </p>
+    </section>
+
+    <section class="panel" id="p-matrizes" role="tabpanel" aria-labelledby="t-matrizes" hidden>
+      <div class="row">
+        <fieldset class="matrix">
+          <legend>Matriz A</legend>
+          <div class="row">
+            <select id="ar"></select>
+            <select id="ac"></select>
+          </div>
+          <div class="scroll" id="ga"></div>
+        </fieldset>
+
+        <fieldset class="matrix">
+          <legend>Matriz B</legend>
+          <div class="row">
+            <select id="br"></select>
+            <select id="bc"></select>
+          </div>
+          <div class="scroll" id="gb"></div>
+        </fieldset>
+      </div>
+
+      <label for="ks">Escalar k</label>
+      <input id="ks" type="text" value="2" inputmode="text" autocomplete="off" spellcheck="false">
+
+      <div class="actions">
+        <button type="button" data-m="add">A + B</button>
+        <button type="button" data-m="sub">A − B</button>
+        <button type="button" data-m="kA">k · A</button>
+        <button type="button" data-m="mul">A × B</button>
+        <button type="button" data-m="det">det(A)</button>
+      </div>
+
+      <div class="output scroll" id="mout" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" id="p-comb" role="tabpanel" aria-labelledby="t-comb" hidden>
+      <div class="row">
+        <div>
+          <label for="cn">n</label>
+          <input id="cn" type="text" value="10" inputmode="numeric">
+        </div>
+        <div>
+          <label for="ck">k</label>
+          <input id="ck" type="text" value="3" inputmode="numeric">
+        </div>
+      </div>
+
+      <label for="cr">Repetições (ex.: 2,1,1 ou uma palavra como ARARA)</label>
+      <input id="cr" type="text" value="ARARA" autocomplete="off">
+
+      <div class="actions">
+        <button type="button" data-c="fat">n!</button>
+        <button type="button" data-c="pS">P(n) e A(n,k)</button>
+        <button type="button" data-c="pR">Permutação com repetição</button>
+        <button type="button" data-c="cmb">C(n,k)</button>
+      </div>
+
+      <div class="output" id="cout" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" id="p-bases" role="tabpanel" aria-labelledby="t-bases" hidden>
+      <label for="bv">Número (aceita sinal, parte fracionária e prefixos 0b, 0o, 0x)</label>
+      <input id="bv" type="text" value="255" autocomplete="off" spellcheck="false">
+
+      <div class="row">
+        <div>
+          <label for="bb">Base de entrada</label>
+          <select id="bb"></select>
+        </div>
+        <div>
+          <label for="bt">Base de saída adicional</label>
+          <select id="bt"></select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="bgo">Converter</button>
+      </div>
+
+      <div class="output" id="bout" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" id="p-bool" role="tabpanel" aria-labelledby="t-bool" hidden>
+      <label for="be">Expressão booleana</label>
+      <input id="be" type="text" value="A·B + ¬A·C" autocomplete="off" spellcheck="false">
+
+      <div class="actions" id="bops" role="group" aria-label="Operadores booleanos"></div>
+
+      <label for="be2">Segunda expressão (opcional, para testar equivalência)</label>
+      <input id="be2" type="text" value="" autocomplete="off" spellcheck="false">
+
+      <div class="actions">
+        <button type="button" id="bogo">Analisar</button>
+      </div>
+
+      <div class="output" id="boout" aria-live="polite"></div>
+
+      <p class="hint">
+        Variáveis: letras A–Z (até 6) e constantes 0 e 1.
+        E: · . × * &amp; ∧ AND ou justaposição (AB).
+        OU: + | ∨ OR.
+        NÃO: ¬ ! ~ NOT ou apóstrofo (A').
+        XOR: ⊕ ^ XOR.
+        Também NAND, NOR, XNOR, → (implica) e ↔ (equivale).
+        Precedência: NÃO &gt; E &gt; XOR &gt; OU &gt; → &gt; ↔.
+        Escreva AND, OR etc. por extenso com espaços para não confundir com variáveis.
+        Também são aceitos ’ ′ (apóstrofo do celular), ⋅ ∙, ⊻, ⇒, ⇔ e ≡.
+      </p>
+    </section>
+
+  </main>
 </body>
+
 </html>
